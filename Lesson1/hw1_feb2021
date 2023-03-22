@@ -23,8 +23,48 @@ db.getCollection('students').find({}).sort({avgScore:1}).limit(1)
 db.getCollection('students').find({}).sort({avgScore:-1}).limit(3)
 
 9) Знайти середній бал по школі
+db.getCollection('students').aggregate([
+    {
+        $group:{
+            _id:0,
+            avgScoreSchool:{$avg: '$avgScore'}
+            }
+    }
+])
+
 10) Знайти середній бал дітей які вивчають математику або фізику
+db.students.aggregate([
+    {
+        $match:{
+            $or:[
+                {lessons:'mathematics'},
+                {lessons:'physics'}
+            ]
+        }
+    },
+    {
+        $group:{
+            _id:0,
+            myAvg:{$avg:'$avgScore'}
+        }
+    }
+])
+
 11) Знайти середній бал по 2 класі
+db.students.aggregate([
+    {
+        $match:{
+            class:2
+        }
+    },
+    {
+        $group:{
+            _id:0,
+            myAvg:{$avg:'$avgScore'}
+        }
+    }
+
+])
 
 12) Знайти дітей з не повною сімєю
 db.getCollection('students').find({
